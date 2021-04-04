@@ -11,7 +11,7 @@ getNLUInstance = () => {
     const { IamAuthenticator } = require('ibm-watson/auth');
 
     const nlu = new NLUv1({
-        version: "2020-08-01",
+        version: "2021-03-25",
         authenticator: new IamAuthenticator({
             apikey: api_key
         }),
@@ -42,12 +42,12 @@ app.get("/text/emotion", (req,res) => {
     let i = getNLUInstance();
     let result = i.analyze({
         version: '2021-03-25',
-        features: 'emotion',
+        features: {emotion : {}},
         text: req.query.text
     });
     // console.log(result);
     result.then(resp => {
-        console.log("response: " + resp);
+        console.log("response: " + JSON.stringify(resp));
     })
     .catch(err => {
         console.log(err.toString());
