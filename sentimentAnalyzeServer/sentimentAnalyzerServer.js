@@ -1,7 +1,7 @@
 const express = require('express');
 const app = new express();
 const dotenv = require('dotenv');
-dontenv.config();
+dotenv.config();
 
 getNLUInstance = () => {
     let api_key = process.env.API_KEY;
@@ -17,6 +17,7 @@ getNLUInstance = () => {
         }),
         serviceUrl: api_url
     });
+    nlu.analyze()
     return nlu;
 }
 
@@ -30,7 +31,6 @@ app.get("/",(req,res)=>{
   });
 
 app.get("/url/emotion", (req,res) => {
-
     return res.send({"happy":"90","sad":"10"});
 });
 
@@ -39,7 +39,20 @@ app.get("/url/sentiment", (req,res) => {
 });
 
 app.get("/text/emotion", (req,res) => {
-    return res.send({"happy":"10","sad":"90"});
+    let i = getNLUInstance();
+    let result = i.analyze({
+        version: '2021-03-25',
+        features: 'emotion',
+        text: req.query.text
+    });
+    // console.log(result);
+    result.then(resp => {
+        console.log("response: " + resp);
+    })
+    .catch(err => {
+        console.log(err.toString());
+    });
+    return res.send({"happy":"90","sad":"10"});
 });
 
 app.get("/text/sentiment", (req,res) => {
