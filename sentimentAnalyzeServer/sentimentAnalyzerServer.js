@@ -45,18 +45,28 @@ app.get("/text/emotion", (req,res) => {
         features: {emotion : {}},
         text: req.query.text
     });
-    // console.log(result);
-    result.then(resp => {
-        console.log("response: " + JSON.stringify(resp));
+    return result.then(resp => {
+        res.send(resp.result.emotion.document.emotion);
     })
     .catch(err => {
         console.log(err.toString());
     });
-    return res.send({"happy":"90","sad":"10"});
 });
 
 app.get("/text/sentiment", (req,res) => {
-    return res.send("text sentiment for "+req.query.text);
+    let i = getNLUInstance();
+    let result = i.analyze({
+        version: '2021-03-25',
+        features: {sentiment : {}},
+        text: req.query.text
+    });
+    return result.then(resp => {
+        console.log("sentiment: " + JSON.stringify(resp.result, null, 2));
+        res.send(resp.result.sentiment.document.label);
+    })
+    .catch(err => {
+        console.log(err.toString());
+    });
 });
 
 let server = app.listen(8080, () => {

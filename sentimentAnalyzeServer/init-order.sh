@@ -7,6 +7,7 @@ npm install --save
 npm install nodemon --save-dev
 npm install --save ibm-watson
 npm install --save dotenv
+npm start
 
 ### client
 npm install --save
